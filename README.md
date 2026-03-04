@@ -26,11 +26,17 @@ npx dep-size-cli express lodash axios
 # Check a single package
 dep-size express
 
-# Compare multiple packages
-dep-size axios got node-fetch undici
+# Compare multiple packages (sort by size!)
+dep-size axios got node-fetch undici --sort
+
+# Show dependency tree
+dep-size express --tree --depth=2
 
 # JSON output for scripts/CI
 dep-size react --json
+
+# CI gate: fail if package exceeds size threshold
+dep-size my-lib --warn=500KB
 ```
 
 ### Example output
@@ -38,37 +44,53 @@ dep-size react --json
 ```
   express@4.21.0
     Size:    214.0 KB (unpacked)
+    Total:   ~1.8 MB (with all deps)
     Files:   72
     Deps:    31 → accepts, array-flatten, body-parser, content-disposition...
     License: MIT
 
-  fastify@5.1.0
-    Size:    542.8 KB (unpacked)
-    Files:   148
-    Deps:    15 → @fastify/ajv-compiler, @fastify/error, @fastify/fast-json-stringify-compiler...
-    License: MIT
+    Dependency tree:
+      ├── accepts@1.3.8 (5.3 KB)
+      │   ├── mime-types@2.1.35 (4.2 KB)
+      │   └── negotiator@0.6.3 (4.8 KB)
+      ├── body-parser@1.20.3 (18.1 KB)
+      └── ...
 ```
 
 ## Features
 
 - ⚡ **Fast** — queries npm registry directly, zero overhead
 - 📦 **Size check** — see unpacked size before installing
+- 🌳 **Dependency tree** — visualize what gets pulled in with `--tree`
+- 📏 **Total install size** — estimated total size including all transitive deps
 - 🔗 **Dependency count** — know what you're pulling in
-- 📊 **Compare packages** — side-by-side comparison of alternatives
+- 📊 **Compare & sort** — side-by-side comparison with `--sort` (largest first)
+- 🚨 **CI gate** — `--warn=SIZE` exits with code 1 if threshold exceeded
 - 🤖 **JSON output** — pipe into scripts and CI pipelines
 - 🪶 **Zero dependencies** — just Node.js built-ins
 
+## Options
+
+| Flag | Description |
+|------|-------------|
+| `--json` | Output as JSON |
+| `--tree` | Show dependency tree |
+| `--depth=N` | Tree depth (default: 3) |
+| `--sort` | Sort results by size (largest first) |
+| `--warn=SIZE` | Exit 1 if any package exceeds threshold (e.g. `500KB`, `1MB`) |
+
 ## Use Cases
 
-- Choosing between `axios` vs `got` vs `node-fetch`? Compare sizes.
-- Auditing your `package.json` for bloat? Check each dep.
-- CI gate to prevent oversized dependencies? Use `--json`.
+- **Choosing alternatives:** `dep-size axios got node-fetch --sort` to compare sizes
+- **Auditing bloat:** Check each dep in your `package.json`
+- **CI pipeline gate:** `dep-size my-lib --warn=1MB --json` to prevent oversized deps
+- **Understanding transitive deps:** `dep-size express --tree` to see the full picture
 
-## API
+## GitHub Actions Example
 
-```js
-// Also usable programmatically
-const { getPackageInfo } = require('dep-size-cli');
+```yaml
+- name: Check dependency size
+  run: npx dep-size-cli my-package --warn=2MB
 ```
 
 ## License

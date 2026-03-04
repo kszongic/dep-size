@@ -1,6 +1,6 @@
 {
   "name": "dep-size-cli",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Check npm package install size, dependencies count, and bundle impact before adding them to your project",
   "main": "index.js",
   "bin": { "dep-size": "./index.js" },
