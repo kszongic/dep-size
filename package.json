@@ -1,0 +1,12 @@
+{
+  "name": "dep-size-cli",
+  "version": "1.0.0",
+  "description": "Check npm package install size, dependencies count, and bundle impact before adding them to your project",
+  "main": "index.js",
+  "bin": { "dep-size": "./index.js" },
+  "keywords": ["npm","package-size","bundle-size","dependencies","install-size","cli","node","bundle","size-check","lightweight"],
+  "author": "kszongic",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/kszongic/dep-size" },
+  "funding": { "type": "github", "url": "https://github.com/sponsors/kszongic" }
+}
